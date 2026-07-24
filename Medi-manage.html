@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>MediManage</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(to bottom right, #0f0f0f, #1a1f2b);
+      color: #ffffff;
+      animation: fadeInBody 0.6s ease-in;
+    }
+
+    @keyframes fadeInBody {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: #111927;
+      padding: 1rem 2rem;
+      color: #ffffff;
+      animation: slideDown 0.6s ease;
+    }
+
+    @keyframes slideDown {
+      from { transform: translateY(-20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    .logo {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 600;
+    }
+
+    nav ul {
+      display: flex;
+      gap: 1.5rem;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    nav a {
+      color: #ffffff;
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.3s, transform 0.3s;
+    }
+
+    nav a:hover {
+      color: #b3c7ff;
+      transform: scale(1.05);
+    }
+
+    .hero {
+      text-align: center;
+      padding: 4rem 2rem;
+      background: linear-gradient(to right, #1a1f2b, #0f0f0f);
+      color: #ffffff;
+      animation: fadeInUp 0.7s ease-in;
+    }
+
+    @keyframes fadeInUp {
+      from { transform: translateY(20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    .hero h1 {
+      font-size: 2.5rem;
+      font-family: 'Montserrat', sans-serif;
+      margin-bottom: 1rem;
+    }
+
+    .hero p {
+      font-size: 1.2rem;
+    }
+
+    .animation-section {
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      padding: 3rem 2rem;
+      flex-wrap: wrap;
+    }
+
+    .animation-section .lottie {
+      width: 300px;
+      height: 300px;
+    }
+
+    .animation-text {
+      max-width: 500px;
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: #ffffff;
+    }
+
+    .section {
+      padding: 3rem 2rem;
+      margin: 2rem;
+      border-radius: 12px;
+    }
+
+    #inventory.section {
+      background-color: #e6f0f5;
+      color: #000000;
+      text-align: center;
+    }
+
+    .section h2 {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+    }
+
+    .input-group {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .input-group input {
+      padding: 0.75rem 1.25rem;
+      border-radius: 0.5rem;
+      border: 1px solid #ccc;
+      font-size: 1rem;
+      max-width: 300px;
+    }
+
+    .input-group button {
+      background-color: #1e40af;
+      color: white;
+      border: none;
+      border-radius: 0.5rem;
+      padding: 0.75rem 1.5rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .input-group button:hover {
+      background-color: #3b82f6;
+    }
+
+    .medicine-list {
+      max-width: 500px;
+      margin: 0 auto;
+    }
+
+    .medicine-entry {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+      margin: 0.5rem 0;
+    }
+
+    .medicine-entry button:first-child {
+      flex: 1;
+      background-color: #2563eb;
+      border: none;
+      border-radius: 0.5rem;
+      color: white;
+      font-weight: 500;
+      cursor: pointer;
+      text-align: center;
+      padding: 0.75rem 1rem;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    .medicine-entry button:first-child:hover {
+      background-color: #1d4ed8;
+      transform: scale(1.05);
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    }
+
+    .delete-button {
+      background-color: #dc2626;
+      color: white;
+      border: none;
+      border-radius: 0.5rem;
+      padding: 0.5rem 0.75rem;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    .delete-button:hover {
+      background-color: #b91c1c;
+      transform: scale(1.05);
+    }
+
+    .invoice {
+      margin-top: 2rem;
+      background: #0f0f0f;
+      padding: 1rem;
+      border-radius: 8px;
+    }
+
+    .footer {
+      text-align: center;
+      padding: 1rem;
+      background-color: #111927;
+      color: #e0e1dd;
+      font-size: 0.9rem;
+    }
+    
+    .clear-button {
+      background-color: #ff4747;
+      color: white;
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background-color 0.3s ease;
+      margin-top: 1rem;
+      text-align: center;
+    }
+
+    .clear-button:hover {
+      background-color: #e32b2b;
+    }
+  </style>
+</head>
+<body>
+  <div class="navbar">
+    <div class="logo">MediManage</div>
+    <nav>
+      <ul>
+        <li><a href="#">Home</a></li>
+        <li><a href="#dashboard">Dashboard</a></li>
+        <li><a href="#inventory">Inventory</a></li>
+        <li><a href="#invoice">Invoice</a></li>
+      </ul>
+    </nav>
+  </div>
+
+  <div class="hero">
+    <h1>Welcome to MediManage</h1>
+    <p>Your digital pharmacy assistant with smart automation</p>
+  </div>
+
+  <div class="animation-section">
+    <div class="lottie" id="lottie-animation"></div>
+    <div class="animation-text">
+      Your AI assistant responds instantly, day or night. Easily locate, bill, and deliver medicines from your inventory.
+    </div>
+  </div>
+
+  <div class="section" id="dashboard">
+    <h2>Dashboard</h2>
+    <p>Quick overview of activity, alerts, and inventory status.</p>
+  </div>
+
+  <div class="section" id="inventory">
+    <h2>Inventory</h2>
+
+    <!-- Add New Medicine -->
+    <div class="input-group">
+      <input type="text" id="newMedicineName" placeholder="Medicine name">
+      <input type="number" id="newMedicinePrice" placeholder="Price">
+      <button onclick="addMedicine()">Add Medicine</button>
+    </div>
+
+    <!-- Issue Existing -->
+    <div class="input-group">
+        <input type="text" id="medicine" placeholder="Enter medicine name..." oninput="showSuggestions()">
+        <div id="suggestions" style="position: relative;"></div>
+        
+      <button onclick="triggerLED()">Issue</button>
+    </div>
+
+    <div class="medicine-list" id="medicineList">
+      <h3>Available Medicines</h3>
+
+      <div class="medicine-entry">
+        <button onclick="selectMedicine('Paracetamol', 15)">Paracetamol - Stock: 20 - ₹15</button>
+        <button class="delete-button" onclick="this.parentElement.remove()">❌</button>
+      </div>
+      <div class="medicine-entry">
+        <button onclick="selectMedicine('Aspirin', 12)">Aspirin - Stock: 15 - ₹12</button>
+        <button class="delete-button" onclick="this.parentElement.remove()">❌</button>
+      </div>
+      <div class="medicine-entry">
+        <button onclick="selectMedicine('Ibuprofen', 20)">Ibuprofen - Stock: 10 - ₹20</button>
+        <button class="delete-button" onclick="this.parentElement.remove()">❌</button>
+      </div>
+      <div class="medicine-entry">
+        <button onclick="selectMedicine('Amoxicillin', 30)">Amoxicillin - Stock: 5 - ₹30</button>
+        <button class="delete-button" onclick="this.parentElement.remove()">❌</button>
+      </div>
+      <div class="medicine-entry">
+        <button onclick="selectMedicine('Ciprofloxacin', 25)">Ciprofloxacin - Stock: 7 - ₹25</button>
+        <button class="delete-button" onclick="this.parentElement.remove()">❌</button>
+      </div>
+      <div class="medicine-entry">
+        <button onclick="selectMedicine('Metformin', 18)">Metformin - Stock: 12 - ₹18</button>
+        <button class="delete-button" onclick="this.parentElement.remove()">❌</button>
+      </div>
+      <div class="medicine-entry">
+        <button onclick="selectMedicine('Atorvastatin', 22)">Atorvastatin - Stock: 8 - ₹22</button>
+        <button class="delete-button" onclick="this.parentElement.remove()">❌</button>
+      </div>
+      <div class="medicine-entry">
+        <button onclick="selectMedicine('Omeprazole', 17)">Omeprazole - Stock: 14 - ₹17</button>
+        <button class="delete-button" onclick="this.parentElement.remove()">❌</button>
+      </div>
+      <div class="medicine-entry">
+        <button onclick="selectMedicine('Losartan', 19)">Losartan - Stock: 11 - ₹19</button>
+        <button class="delete-button" onclick="this.parentElement.remove()">❌</button>
+      </div>
+      <div class="medicine-entry">
+        <button onclick="selectMedicine('Levothyroxine', 24)">Levothyroxine - Stock: 6 - ₹24</button>
+        <button class="delete-button" onclick="this.parentElement.remove()">❌</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="section" id="invoice">
+    <h2>Invoice</h2>
+    <div class="invoice" id="invoiceContent">
+      <p><strong>Invoice ID:</strong> #MEDI123</p>
+      <ul id="invoiceMedicineList"></ul>
+      <p id="totalPrice"><strong>Total Price:</strong> ₹0</p>
+      <img id="qrCode" src="" alt="QR Code">
+      <button class="clear-button" onclick="clearInvoice()">Clear Invoice</button>
+    </div>
+  </div>
+
+  <div class="footer">
+    &copy; 2025 MediManage. All rights reserved.
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.7.6/lottie.min.js"></script>
+  <script>
+
+    
+    var animation = lottie.loadAnimation({
+      container: document.getElementById('lottie-animation'),
+      renderer: 'svg',
+      loop: true,
+      autoplay: true,
+      path: 'https://assets9.lottiefiles.com/packages/lf20_yr6zz3wv.json'
+    });
+  
+    const selectedMedicines = {};
+    let total = 0;
+  
+    const medicineMap = {
+      "Paracetamol": 15,
+      "Aspirin": 12,
+      "Ibuprofen": 20,
+      "Amoxicillin": 30,
+      "Ciprofloxacin": 25,
+      "Metformin": 18,
+      "Atorvastatin": 22,
+      "Omeprazole": 17,
+      "Losartan": 19,
+      "Levothyroxine": 24
+    };
+  
+    function triggerLED() {
+      const medicineName = document.getElementById("medicine").value.trim();
+  
+      if (medicineName in medicineMap) {
+        const price = medicineMap[medicineName];
+        selectMedicine(medicineName, price);
+        document.getElementById("medicine").value = '';
+      } else {
+        alert("Medicine not found in inventory.");
+      }
+    }
+  
+    function selectMedicine(name, price) {
+      const quantity = prompt(`How much quantity do you want to add for ${name}?`);
+  
+      if (!quantity || isNaN(quantity) || quantity <= 0) {
+        alert("Please enter a valid quantity.");
+        return;
+      }
+  
+      const quantityNumber = parseInt(quantity, 10);
+      const totalPriceForMedicine = price * quantityNumber;
+  
+      if (selectedMedicines[name]) {
+        selectedMedicines[name].count += quantityNumber;
+        selectedMedicines[name].totalPrice += totalPriceForMedicine;
+      } else {
+        selectedMedicines[name] = {
+          count: quantityNumber,
+          price: price,
+          totalPrice: totalPriceForMedicine
+        };
+      }
+  
+      total += totalPriceForMedicine;
+      updateInvoice();
+      alert(`LED for ${name} triggered. Quantity: ${quantityNumber}`);
+      window.location.href = "#invoice";
+    }
+  
+    function updateInvoice() {
+      const list = document.getElementById("invoiceMedicineList");
+      const totalField = document.getElementById("totalPrice");
+      list.innerHTML = "";
+  
+      let index = 1;
+      for (const name in selectedMedicines) {
+        const med = selectedMedicines[name];
+        const li = document.createElement("li");
+        li.innerText = `${index++}. ${name} x${med.count} - ₹${med.totalPrice}`;
+        list.appendChild(li);
+      }
+  
+      totalField.innerText = `Total Price: ₹${total}`;
+      const qrCode = document.getElementById("qrCode");
+      const data = encodeURIComponent(`Medicines: ${Object.entries(selectedMedicines).map(([name, m]) => `${name} x${m.count}`).join(', ')} | Total: ₹${total}`);
+      qrCode.src = `https://api.qrserver.com/v1/create-qr-code/?data=${data}&size=150x150`;
+    }
+  
+    function addMedicine() {
+      const name = document.getElementById("newMedicineName").value.trim();
+      const price = parseInt(document.getElementById("newMedicinePrice").value.trim(), 10);
+  
+      if (!name || isNaN(price) || price <= 0) {
+        alert("Please enter a valid medicine name and price.");
+        return;
+      }
+  
+      if (medicineMap[name]) {
+        alert("Medicine already exists.");
+        return;
+      }
+  
+      medicineMap[name] = price;
+  
+      const entry = document.createElement("div");
+      entry.className = "medicine-entry";
+  
+      const btn = document.createElement("button");
+      btn.textContent = `${name} - ₹${price}`;
+      btn.onclick = () => selectMedicine(name, price);
+  
+      const delBtn = document.createElement("button");
+      delBtn.textContent = "❌";
+      delBtn.className = "delete-button";
+      delBtn.onclick = () => {
+        delete medicineMap[name];
+        entry.remove();
+      };
+  
+      entry.appendChild(btn);
+      entry.appendChild(delBtn);
+  
+      document.getElementById("medicineList").appendChild(entry);
+  
+      document.getElementById("newMedicineName").value = '';
+      document.getElementById("newMedicinePrice").value = '';
+    }
+  
+    function clearInvoice() {
+  // Reset all invoice data
+  for (const name in selectedMedicines) {
+    delete selectedMedicines[name];
+  }
+
+  total = 0;
+
+  // Clear invoice UI
+  document.getElementById("invoiceMedicineList").innerHTML = "";
+  document.getElementById("totalPrice").innerText = "Total Price: ₹0";
+  document.getElementById("qrCode").src = "";
+}
+
+function showSuggestions() {
+  const input = document.getElementById("medicine");
+  const suggestionsDiv = document.getElementById("suggestions");
+  const inputValue = input.value.trim().toLowerCase();
+  suggestionsDiv.innerHTML = "";
+
+  if (!inputValue) return;
+
+  const matches = Object.keys(medicineMap).filter(med =>
+    med.toLowerCase().includes(inputValue)
+  );
+
+  if (matches.length === 0) return;
+
+  const list = document.createElement("ul");
+  list.style.position = "absolute";
+  list.style.top = "100%";
+  list.style.left = "0";
+  list.style.width = "100%";
+  list.style.backgroundColor = "#ffffff";
+  list.style.color = "#000";
+  list.style.border = "1px solid #ccc";
+  list.style.borderRadius = "0.5rem";
+  list.style.maxHeight = "150px";
+  list.style.overflowY = "auto";
+  list.style.zIndex = "999";
+
+  matches.forEach(match => {
+    const item = document.createElement("li");
+    item.textContent = match;
+    item.style.padding = "0.5rem";
+    item.style.cursor = "pointer";
+
+    item.addEventListener("click", () => {
+      input.value = match;
+      suggestionsDiv.innerHTML = "";
+    });
+
+    item.addEventListener("mouseover", () => {
+      item.style.backgroundColor = "#e0e0e0";
+    });
+
+    item.addEventListener("mouseout", () => {
+      item.style.backgroundColor = "transparent";
+    });
+
+    list.appendChild(item);
+  });
+
+  suggestionsDiv.appendChild(list);
+}
+document.addEventListener("click", function (e) {
+  if (!document.getElementById("medicine").contains(e.target) &&
+      !document.getElementById("suggestions").contains(e.target)) {
+    document.getElementById("suggestions").innerHTML = "";
+  }
+});
+
+
+  </script>
+</body>
+</html>
