@@ -230,28 +230,74 @@
     .clear-button:hover {
       background-color: #e32b2b;
     }
+    *, *::before, *::after { box-sizing: border-box; }
+    :focus-visible {
+      outline: 3px solid #a16207;
+      outline-offset: 4px;
+      box-shadow: 0 0 0 7px #fff;
+    }
+    .skip-link {
+      position: absolute;
+      left: 1rem;
+      top: 1rem;
+      transform: translateY(-200%);
+      z-index: 10;
+      padding: 0.75rem;
+      background: #fff;
+      color: #111927;
+    }
+    .skip-link:focus { transform: translateY(0); }
+    .input-field { display: flex; flex-direction: column; gap: 0.5rem; text-align: left; }
+    input { color: #111927; background: #fff; }
+    input::placeholder { color: #595959; opacity: 1; }
+    .input-group { align-items: end; }
+    .input-group input { border-color: #64748b; width: 100%; min-width: 0; }
+    .input-group button:hover { background-color: #1d4ed8; }
+    .clear-button { background-color: #b91c1c; }
+    .clear-button:hover { background-color: #991b1b; }
+    button, nav a { min-height: 44px; }
+    nav a { display: inline-flex; align-items: center; }
+    .animation-controls { text-align: center; }
+    #animationToggle { padding: 0.75rem 1rem; cursor: pointer; }
+    #status { min-height: 1.5em; text-align: center; }
+    @media (max-width: 600px) {
+      .navbar { flex-direction: column; gap: 1rem; padding: 1rem; }
+      nav ul { flex-wrap: wrap; justify-content: center; gap: 0.75rem; }
+      .section { margin: 1rem; padding: 1.5rem 1rem; }
+      .input-field { width: 100%; }
+      .animation-section .lottie { max-width: 100%; }
+      .medicine-entry button:first-child { min-width: 0; overflow-wrap: anywhere; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation: none !important; transition: none !important; }
+    }
   </style>
 </head>
 <body>
-  <div class="navbar">
+  <a class="skip-link" href="#main">Skip to main content</a>
+  <header class="navbar">
     <div class="logo">MediManage</div>
-    <nav>
+    <nav aria-label="Primary">
       <ul>
-        <li><a href="#">Home</a></li>
+        <li><a href="#home">Home</a></li>
         <li><a href="#dashboard">Dashboard</a></li>
         <li><a href="#inventory">Inventory</a></li>
         <li><a href="#invoice">Invoice</a></li>
       </ul>
     </nav>
-  </div>
+  </header>
 
-  <div class="hero">
+  <main id="main" tabindex="-1">
+  <div class="hero" id="home">
     <h1>Welcome to MediManage</h1>
     <p>Your digital pharmacy assistant with smart automation</p>
   </div>
 
   <div class="animation-section">
-    <div class="lottie" id="lottie-animation"></div>
+    <div>
+      <div class="lottie" id="lottie-animation" aria-hidden="true"></div>
+      <div class="animation-controls"><button id="animationToggle" type="button" aria-controls="lottie-animation" hidden>Pause animation</button></div>
+    </div>
     <div class="animation-text">
       Your AI assistant responds instantly, day or night. Easily locate, bill, and deliver medicines from your inventory.
     </div>
@@ -267,15 +313,19 @@
 
     <!-- Add New Medicine -->
     <div class="input-group">
-      <input type="text" id="newMedicineName" placeholder="Medicine name">
-      <input type="number" id="newMedicinePrice" placeholder="Price">
+      <div class="input-field"><label for="newMedicineName">Medicine name</label>
+      <input type="text" id="newMedicineName" placeholder="Medicine name"></div>
+      <div class="input-field"><label for="newMedicinePrice">Price (₹)</label>
+      <input type="number" id="newMedicinePrice" placeholder="Price" min="1" step="1"></div>
       <button onclick="addMedicine()">Add Medicine</button>
     </div>
 
     <!-- Issue Existing -->
     <div class="input-group">
-        <input type="text" id="medicine" placeholder="Enter medicine name..." oninput="showSuggestions()">
-        <div id="suggestions" style="position: relative;"></div>
+        <div class="input-field"><label for="medicine">Medicine to issue</label>
+        <input type="text" id="medicine" placeholder="Enter medicine name..." list="medicineSuggestions" aria-describedby="medicineHelp">
+        <datalist id="medicineSuggestions"></datalist>
+        <small id="medicineHelp">Type or choose a medicine from the suggestions.</small></div>
         
       <button onclick="triggerLED()">Issue</button>
     </div>
@@ -285,43 +335,43 @@
 
       <div class="medicine-entry">
         <button onclick="selectMedicine('Paracetamol', 15)">Paracetamol - Stock: 20 - ₹15</button>
-        <button class="delete-button" onclick="this.parentElement.remove()">❌</button>
+        <button class="delete-button" aria-label="Delete Paracetamol from inventory" onclick="removeMedicine(this)">❌</button>
       </div>
       <div class="medicine-entry">
         <button onclick="selectMedicine('Aspirin', 12)">Aspirin - Stock: 15 - ₹12</button>
-        <button class="delete-button" onclick="this.parentElement.remove()">❌</button>
+        <button class="delete-button" aria-label="Delete Aspirin from inventory" onclick="removeMedicine(this)">❌</button>
       </div>
       <div class="medicine-entry">
         <button onclick="selectMedicine('Ibuprofen', 20)">Ibuprofen - Stock: 10 - ₹20</button>
-        <button class="delete-button" onclick="this.parentElement.remove()">❌</button>
+        <button class="delete-button" aria-label="Delete Ibuprofen from inventory" onclick="removeMedicine(this)">❌</button>
       </div>
       <div class="medicine-entry">
         <button onclick="selectMedicine('Amoxicillin', 30)">Amoxicillin - Stock: 5 - ₹30</button>
-        <button class="delete-button" onclick="this.parentElement.remove()">❌</button>
+        <button class="delete-button" aria-label="Delete Amoxicillin from inventory" onclick="removeMedicine(this)">❌</button>
       </div>
       <div class="medicine-entry">
         <button onclick="selectMedicine('Ciprofloxacin', 25)">Ciprofloxacin - Stock: 7 - ₹25</button>
-        <button class="delete-button" onclick="this.parentElement.remove()">❌</button>
+        <button class="delete-button" aria-label="Delete Ciprofloxacin from inventory" onclick="removeMedicine(this)">❌</button>
       </div>
       <div class="medicine-entry">
         <button onclick="selectMedicine('Metformin', 18)">Metformin - Stock: 12 - ₹18</button>
-        <button class="delete-button" onclick="this.parentElement.remove()">❌</button>
+        <button class="delete-button" aria-label="Delete Metformin from inventory" onclick="removeMedicine(this)">❌</button>
       </div>
       <div class="medicine-entry">
         <button onclick="selectMedicine('Atorvastatin', 22)">Atorvastatin - Stock: 8 - ₹22</button>
-        <button class="delete-button" onclick="this.parentElement.remove()">❌</button>
+        <button class="delete-button" aria-label="Delete Atorvastatin from inventory" onclick="removeMedicine(this)">❌</button>
       </div>
       <div class="medicine-entry">
         <button onclick="selectMedicine('Omeprazole', 17)">Omeprazole - Stock: 14 - ₹17</button>
-        <button class="delete-button" onclick="this.parentElement.remove()">❌</button>
+        <button class="delete-button" aria-label="Delete Omeprazole from inventory" onclick="removeMedicine(this)">❌</button>
       </div>
       <div class="medicine-entry">
         <button onclick="selectMedicine('Losartan', 19)">Losartan - Stock: 11 - ₹19</button>
-        <button class="delete-button" onclick="this.parentElement.remove()">❌</button>
+        <button class="delete-button" aria-label="Delete Losartan from inventory" onclick="removeMedicine(this)">❌</button>
       </div>
       <div class="medicine-entry">
         <button onclick="selectMedicine('Levothyroxine', 24)">Levothyroxine - Stock: 6 - ₹24</button>
-        <button class="delete-button" onclick="this.parentElement.remove()">❌</button>
+        <button class="delete-button" aria-label="Delete Levothyroxine from inventory" onclick="removeMedicine(this)">❌</button>
       </div>
     </div>
   </div>
@@ -332,27 +382,41 @@
       <p><strong>Invoice ID:</strong> #MEDI123</p>
       <ul id="invoiceMedicineList"></ul>
       <p id="totalPrice"><strong>Total Price:</strong> ₹0</p>
-      <img id="qrCode" src="" alt="QR Code">
+      <img id="qrCode" alt="QR code containing the medicines, quantities, and total shown in this invoice" width="150" height="150" hidden>
       <button class="clear-button" onclick="clearInvoice()">Clear Invoice</button>
     </div>
   </div>
 
-  <div class="footer">
+  <p id="status" role="status" aria-atomic="true"></p>
+  </main>
+  <footer class="footer">
     &copy; 2025 MediManage. All rights reserved.
-  </div>
+  </footer>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.7.6/lottie.min.js"></script>
   <script>
 
     
-    var animation = lottie.loadAnimation({
-      container: document.getElementById('lottie-animation'),
-      renderer: 'svg',
-      loop: true,
-      autoplay: true,
-      path: 'https://assets9.lottiefiles.com/packages/lf20_yr6zz3wv.json'
-    });
-  
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const animationToggle = document.getElementById('animationToggle');
+    if (window.lottie) {
+      const animation = lottie.loadAnimation({
+        container: document.getElementById('lottie-animation'),
+        renderer: 'svg', loop: true, autoplay: !reducedMotion.matches,
+        path: 'https://assets9.lottiefiles.com/packages/lf20_yr6zz3wv.json'
+      });
+      let paused = reducedMotion.matches;
+      animationToggle.hidden = false;
+      function setPaused(value) {
+        paused = value;
+        if (paused) animation.pause(); else animation.play();
+        animationToggle.textContent = paused ? 'Play animation' : 'Pause animation';
+      }
+      animationToggle.textContent = paused ? 'Play animation' : 'Pause animation';
+      animationToggle.addEventListener('click', () => setPaused(!paused));
+      reducedMotion.addEventListener('change', event => setPaused(event.matches));
+    }
+
     const selectedMedicines = {};
     let total = 0;
   
@@ -406,7 +470,10 @@
       total += totalPriceForMedicine;
       updateInvoice();
       alert(`LED for ${name} triggered. Quantity: ${quantityNumber}`);
-      window.location.href = "#invoice";
+      window.location.hash = "invoice";
+      const heading = document.querySelector("#invoice h2");
+      heading.tabIndex = -1;
+      heading.focus();
     }
   
     function updateInvoice() {
@@ -425,6 +492,7 @@
       totalField.innerText = `Total Price: ₹${total}`;
       const qrCode = document.getElementById("qrCode");
       const data = encodeURIComponent(`Medicines: ${Object.entries(selectedMedicines).map(([name, m]) => `${name} x${m.count}`).join(', ')} | Total: ₹${total}`);
+      qrCode.hidden = false;
       qrCode.src = `https://api.qrserver.com/v1/create-qr-code/?data=${data}&size=150x150`;
     }
   
@@ -454,15 +522,16 @@
       const delBtn = document.createElement("button");
       delBtn.textContent = "❌";
       delBtn.className = "delete-button";
-      delBtn.onclick = () => {
-        delete medicineMap[name];
-        entry.remove();
-      };
-  
+      delBtn.setAttribute("aria-label", `Delete ${name} from inventory`);
+      delBtn.onclick = () => removeMedicine(delBtn, name);
+
       entry.appendChild(btn);
       entry.appendChild(delBtn);
   
       document.getElementById("medicineList").appendChild(entry);
+      refreshSuggestions();
+      document.getElementById("status").textContent = `${name} added to inventory.`;
+      document.getElementById("newMedicineName").focus();
   
       document.getElementById("newMedicineName").value = '';
       document.getElementById("newMedicinePrice").value = '';
@@ -479,67 +548,38 @@
   // Clear invoice UI
   document.getElementById("invoiceMedicineList").innerHTML = "";
   document.getElementById("totalPrice").innerText = "Total Price: ₹0";
-  document.getElementById("qrCode").src = "";
+  document.getElementById("qrCode").removeAttribute("src");
+  document.getElementById("qrCode").hidden = true;
+  document.getElementById("status").textContent = "Invoice cleared.";
 }
 
-function showSuggestions() {
-  const input = document.getElementById("medicine");
-  const suggestionsDiv = document.getElementById("suggestions");
-  const inputValue = input.value.trim().toLowerCase();
-  suggestionsDiv.innerHTML = "";
-
-  if (!inputValue) return;
-
-  const matches = Object.keys(medicineMap).filter(med =>
-    med.toLowerCase().includes(inputValue)
-  );
-
-  if (matches.length === 0) return;
-
-  const list = document.createElement("ul");
-  list.style.position = "absolute";
-  list.style.top = "100%";
-  list.style.left = "0";
-  list.style.width = "100%";
-  list.style.backgroundColor = "#ffffff";
-  list.style.color = "#000";
-  list.style.border = "1px solid #ccc";
-  list.style.borderRadius = "0.5rem";
-  list.style.maxHeight = "150px";
-  list.style.overflowY = "auto";
-  list.style.zIndex = "999";
-
-  matches.forEach(match => {
-    const item = document.createElement("li");
-    item.textContent = match;
-    item.style.padding = "0.5rem";
-    item.style.cursor = "pointer";
-
-    item.addEventListener("click", () => {
-      input.value = match;
-      suggestionsDiv.innerHTML = "";
-    });
-
-    item.addEventListener("mouseover", () => {
-      item.style.backgroundColor = "#e0e0e0";
-    });
-
-    item.addEventListener("mouseout", () => {
-      item.style.backgroundColor = "transparent";
-    });
-
-    list.appendChild(item);
-  });
-
-  suggestionsDiv.appendChild(list);
+function refreshSuggestions() {
+  const suggestions = document.getElementById('medicineSuggestions');
+  suggestions.replaceChildren(...Object.keys(medicineMap).map(name => {
+    const option = document.createElement('option');
+    option.value = name;
+    return option;
+  }));
 }
-document.addEventListener("click", function (e) {
-  if (!document.getElementById("medicine").contains(e.target) &&
-      !document.getElementById("suggestions").contains(e.target)) {
-    document.getElementById("suggestions").innerHTML = "";
-  }
+
+function removeMedicine(button, name) {
+  const entry = button.closest('.medicine-entry');
+  name = name || entry.querySelector('button').textContent.split(' - ')[0];
+  const nextEntry = entry.nextElementSibling || entry.previousElementSibling;
+  const nextFocus = nextEntry?.classList.contains('medicine-entry')
+    ? nextEntry.querySelector('button') : document.getElementById('newMedicineName');
+  delete medicineMap[name];
+  entry.remove();
+  refreshSuggestions();
+  nextFocus.focus();
+  document.getElementById('status').textContent = `${name} removed from inventory.`;
+}
+
+document.querySelectorAll('.medicine-entry').forEach(entry => {
+  const name = entry.querySelector('button').textContent.split(' - ')[0];
+  entry.querySelector('.delete-button').setAttribute('aria-label', `Delete ${name} from inventory`);
 });
-
+refreshSuggestions();
 
   </script>
 </body>
